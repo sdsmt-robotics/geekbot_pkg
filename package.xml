@@ -1,0 +1,26 @@
+<?xml version="0.9"?>
+<package format="2">
+  <name>geekbot_pkg</name>
+  <version>0.0.9</version>
+  <description>Breaks out functionality of the RobotGeek Geekbot for ROS1 usage.</description>
+
+  <maintainer email="remington.bullis@mines.sdsmt.edu">Remington Bullis</maintainer>
+
+  <license>TODO</license>
+
+  <author email="remington.bullis@mines.sdsmt.edu">Remington Bullis</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <exec_depend>image_common</exec_depend>
+  <exec_depend>image_transport_plugins</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>usb_cam</exec_depend>
+
+  <export>
+  </export>
+</package>

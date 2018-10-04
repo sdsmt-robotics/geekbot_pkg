@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<launch>
+  <group ns="geekbot">
+
+    <node name="geekbot_node" pkg="geekbot_pkg" type="geekbot_handler" output="screen"/>
+
+    <node name="webcam" pkg="usb_cam" type="usb_cam_node">
+        <param name="camera_frame_id" value="front_cam" type="string"/>
+	<param name="pixel_format" value ="yuyv" type="string"/>
+	<param name="image_width" value="640" type="int"/>
+	<param name="image_height" value="480" type="int"/>
+	<param name="jpeg_quality" value="50" type="int"/>
+    </node>
+
+   
+
+    <group ns="webcam/image_raw" >
+     <rosparam param="disable_pub_plugins">
+       - 'image_transport/compressedDepth'
+       - 'image_transport/theora'
+     </rosparam>
+    </group>
+   </group>
+</launch>
+

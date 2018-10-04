@@ -1,0 +1,78 @@
+#!/usr/bin/python
+import geekbot
+from threading import Lock
+import sys
+
+import rospy
+from std_msgs.msg import Int32, UInt8, String
+
+class GeekBotNode():
+	serial = Lock()
+
+	def left_callback(self, msg):
+		speed = msg.data
+		self.serial.acquire()
+		self.bot.drive_left_wheel(speed)
+		self.serial.release()
+
+	def right_callback(self, msg):
+		speed = msg.data
+		self.serial.acquire()
+		self.bot.drive_right_wheel(speed)
+		self.serial.release()
+
+	def pos_callback(self, msg):
+		angle = msg.data
+		self.serial.acquire()
+		self.bot.set_ir_position(angle)
+		self.serial.release()
+
+	def update_ir(self):
+		msg = Int32()
+		self.serial.acquire()
+		msg.data = self.bot.get_ir_distance()
+		self.serial.release()
+		self.irPub.publish(msg)
+
+	def update(self):
+		self.update_ir()
+
+	def run(self):
+		while not rospy.is_shutdown():
+			self.update()
+			self.rate.sleep()
+
+	def __init__(self, rate, namespace, path=None):
+		self.baud = rate
+		self.name = namespace
+		self.port = path
+		self.bot = geekbot.Robot(self.baud, self.port)
+
+		rospy.init_node('geekbot_node', anonymous=True)
+	
+		self.irPub = rospy.Publisher('ir_cm', Int32, queue_size=10)
+
+		self.leftSub = rospy.Subscriber('left_wheel', Int32, self.left_callback)
+		self.rightSub = rospy.Subscriber('right_wheel', Int32, self.right_callback)
+		self.posSub = rospy.Subscriber('ir_pos', Int32, self.pos_callback)
+
+		self.rate = rospy.Rate(10)
+
+def main(args=None):
+	geekbotNode = GeekBotNode(57600, 'geekbot')
+
+	geekbotNode.run()
+
+
+
+if __name__ == '__main__':
+	main()
+
+
+
+
+
+
+
+
+

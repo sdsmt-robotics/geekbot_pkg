@@ -1,0 +1,15 @@
+[Unit]
+Description=ROS bringup for Geekbot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+#User=geekbot
+ExecStart=/opt/ros/kinetic/env.sh /root/geekbot_ws/devel/env.sh /root/geekbot_ws/src/geekbot_pkg/bringup/geekbot_start.sh 
+ExecStop=/usr/bin/pkill roslaunch
+KillMode=process
+KillSignal=SIGKILL
+
+[Install]
+WantedBy=multi-user.target

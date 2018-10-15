@@ -4,10 +4,16 @@ from time import sleep as wait
 from struct import pack, unpack
 from collections import namedtuple
 
+# FTDI GeekDuino
+robot_vid  = 0x0403
+robot_pid  = 0x6001
 
-robot_vid = 0x0403
-robot_pid = 0x6001
+# Sparkfun Clone
 robot_pid2 = 0x6015
+
+# Genuino Uno
+robot_vid2 = 0x2341
+robot_pid3 = 0x0001
 
 handshake  = 0x77
 end_flag   = 0x33
@@ -41,7 +47,8 @@ class Robot:
         port_list = serial.tools.list_ports.comports()
         for i in port_list:
             print(i.device)
-            if (i.vid == robot_vid) and (i.pid == robot_pid or i.pid == robot_pid2):
+            if (i.vid == robot_vid or i.vid == robot_vid2) \
+            and (i.pid == robot_pid or i.pid == robot_pid2 or i.pid == robot_pid3):        
                 return str(i.device)
         return None
 

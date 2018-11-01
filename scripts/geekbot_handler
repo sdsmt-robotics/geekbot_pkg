@@ -4,7 +4,7 @@ from threading import Lock
 import sys
 
 import rospy
-from std_msgs.msg import Int32, UInt8, String
+from std_msgs.msg import Int32, Bool
 
 class GeekBotNode():
 	serial = Lock()
@@ -27,6 +27,15 @@ class GeekBotNode():
 		self.bot.set_ir_position(angle)
 		self.serial.release()
 
+	def light_callback(self, msg);
+		on_off = msg.data
+		self.serial.acquire()
+		if on_off:
+			self.bot.lights_on()
+		else:
+			self.bot.lights_off()
+		self.serial.release()
+
 	def update_ir(self):
 		msg = Int32()
 		self.serial.acquire()
@@ -42,9 +51,9 @@ class GeekBotNode():
 			self.update()
 			self.rate.sleep()
 
-	def __init__(self, rate, namespace, path=None):
-		self.baud = rate
-		self.name = namespace
+	def __init__(self, baudrate, bot_name, path=None):
+		self.baud = baudrate
+		self.name = bot_name
 		self.port = path
 		self.bot = geekbot.Robot(self.baud, self.port)
 
@@ -55,12 +64,12 @@ class GeekBotNode():
 		self.leftSub = rospy.Subscriber('left_wheel', Int32, self.left_callback)
 		self.rightSub = rospy.Subscriber('right_wheel', Int32, self.right_callback)
 		self.posSub = rospy.Subscriber('ir_pos', Int32, self.pos_callback)
+		self.lightSub = rospy.Subscriber('lights', Bool, self.light_callback)
 
 		self.rate = rospy.Rate(10)
 
 def main(args=None):
 	geekbotNode = GeekBotNode(57600, 'geekbot')
-
 	geekbotNode.run()
 
 

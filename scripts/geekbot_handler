@@ -27,7 +27,7 @@ class GeekBotNode():
 		self.bot.set_ir_position(angle)
 		self.serial.release()
 
-	def light_callback(self, msg);
+	def light_callback(self, msg):
 		on_off = msg.data
 		self.serial.acquire()
 		if on_off:
